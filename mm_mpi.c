@@ -150,9 +150,9 @@ int main (int argc, char *argv[])
     }   
  
     /* deallocate memory */
-    free(a);
-    free(b);
-    free(c);
+    dealloc_array2d(a);
+    dealloc_array2d(b);
+    dealloc_array2d(c);
 
     MPI_Finalize();
     return (0);

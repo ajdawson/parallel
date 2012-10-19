@@ -86,9 +86,9 @@ int main(int argc, char *argv[])
     }
 
     /* deallocate memory */
-    free(a);
-    free(b);
-    free(c);
+    dealloc_array2d(a);
+    dealloc_array2d(b);
+    dealloc_array2d(c);
 
     printf("-> complete\n");
     return (0);

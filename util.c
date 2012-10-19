@@ -23,6 +23,15 @@ double **array2d(int n, int m)
 }
 
 /*
+ * Deallocation of arrays constructed with array2d.
+ */
+void dealloc_array2d(double **array)
+{
+    free(array[0]);
+    free(array);
+}
+
+/*
  * Print the values of a 2D array to the screen.
  */
 void print_double_array(int nrows, int ncols, double **array)
