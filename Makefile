@@ -14,13 +14,13 @@ OMP_LDFLAGS=-lgomp
 all: mm_omp.exe mm_serial.exe mm_mpi.exe
 
 mm_serial.exe: mm_serial.o util.o
-	$(CC) $(LDFLAGS) mm_serial.o util.o -o mm_serial.exe
+	$(CC) mm_serial.o util.o -o mm_serial.exe $(LDFLAGS)
 
 mm_omp.exe: mm_omp.o util.o
-	$(CC) $(LDFLAGS) $(OMP_LDFLAGS) mm_omp.o util.o -o mm_omp.exe
+	$(CC) mm_omp.o util.o -o mm_omp.exe $(LDFLAGS) $(OMP_LDFLAGS)
 
 mm_mpi.exe: mm_mpi.o util.o
-	$(MPICC) $(LDFLAGS) mm_mpi.o util.o -o mm_mpi.exe
+	$(MPICC) mm_mpi.o util.o -o mm_mpi.exe $(LDFLAGS)
 
 mm_serial.o: mm_serial.c
 	$(CC) $(CFLAGS) mm_serial.c
