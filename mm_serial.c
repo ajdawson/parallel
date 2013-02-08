@@ -1,10 +1,10 @@
-/******************************************************************************
+/****************************************************************************
  * File: mm_serial.c
  * Description:
  *   Matrix multiplication (serial version).
  * Author: Andrew Dawson
  * Credit: Based on code by Blaise Barney
- *****************************************************************************/
+ ***************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include "util.h"
@@ -13,8 +13,8 @@
 #define NCA 1000    /* number of columns in matrix A */
 #define NCB 1000    /* number of columns in matrix B */
 
-/* whether or not to print the result to the screen, should be off for large
- * matrix dimensions, can set using -DPRINT=1 at compile time */
+/* whether or not to print the result to the screen, should be off for
+ * large matrix dimensions, can set using -DPRINT=1 at compile time */
 #ifndef PRINT
 #define PRINT 0
 #endif

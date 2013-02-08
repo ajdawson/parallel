@@ -1,10 +1,10 @@
-/******************************************************************************
+/****************************************************************************
  * File: mm_omp.c
  * Description:
  *   Matrix multiplication (OpenMP version).
  * Author: Andrew Dawson
  * Credit: Based on code by Blaise Barney
- *****************************************************************************/
+ ***************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
@@ -14,8 +14,8 @@
 #define NCA 1000    /* number of columns in matrix A */
 #define NCB 1000    /* number of columns in matrix B */
 
-/* whether or not to print the result to the screen, should be off for large
- * matrix dimensions, can set using -DPRINT=1 at compile time */
+/* whether or not to print the result to the screen, should be off for
+ * large matrix dimensions, can set using -DPRINT=1 at compile time */
 #ifndef PRINT
 #define PRINT 0
 #endif
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     tid = omp_get_thread_num();
     if (tid == 0) {
         nthreads = omp_get_num_threads();
-        printf("-----------------------------------------\n");
+        printf("-----------------------------------------------------\n");
         printf("matrix multiply test (parallel %d threads with OpenMP)\n", nthreads);
         printf("-----------------------------------------------------\n");
         printf("matrix dimensions: a[%d][%d] b[%d][%d] c[%d][%d]\n",

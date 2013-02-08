@@ -1,10 +1,10 @@
-/******************************************************************************
+/***************************************************************************
  * File: mm_mpi.c
  * Description:
  *   Matrix multiplication (MPI version).
  * Author: Andrew Dawson
  * Credit: Based on code by Blaise Barney
- *****************************************************************************/
+ **************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
@@ -14,8 +14,8 @@
 #define NCA 1000    /* number of columns in matrix A */
 #define NCB 1000    /* number of columns in matrix B */
 
-/* whether or not to print the result to the screen, should be off for large
- * matrix dimensions, can set using -DPRINT=1 at compile time */
+/* whether or not to print the result to the screen, should be off for
+ * large matrix dimensions, can set using -DPRINT=1 at compile time */
 #ifndef PRINT
 #define PRINT 0
 #endif
@@ -28,8 +28,12 @@ int main (int argc, char *argv[])
 {
     int i, j, k;    /* loop indices */
     
-    /* matrices to be multiplied and the resut */
+    /* matrices to be multiplied and the result */
     double **a, **b, **c;
+
+    /* string for worker hostnames */
+    int msg_len;
+    char msg[80];
 
     int numtasks,              /* number of tasks in partition */
         taskid,                /* a task identifier */
@@ -38,7 +42,8 @@ int main (int argc, char *argv[])
         dest,                  /* task id of message destination */
         mtype,                 /* message type */
         rows,                  /* rows of matrix A sent to each worker */
-        averow, extra, offset, /* used to determine rows sent to each worker */
+        averow, extra, offset, /* used to determine rows sent to each
+                                * worker */
         rc;
 
     MPI_Status status;
@@ -65,9 +70,20 @@ int main (int argc, char *argv[])
      * work for the master task
      ******************************************************************/
     if (taskid == MASTER) {
-        printf("-----------------------------------------\n");
+        printf("--------------------------------------------------\n");
         printf("matrix multiply test (parallel %d threads with MPI)\n", numtasks);
         printf("--------------------------------------------------\n");
+
+        /* get processor names */
+        MPI_Get_processor_name(msg, &msg_len);
+        printf("[master thread on %s]\n", msg);
+        mtype = FROM_WORKER;
+        for (source=1; source<=numworkers; source++) {
+            MPI_Recv(msg, 80, MPI_CHAR, source, mtype, MPI_COMM_WORLD,
+                    &status);
+            printf("[worker #%d on %s]\n", source, msg);
+        }
+
         printf("matrix dimensions: a[%d][%d] b[%d][%d] c[%d][%d]\n",
                 NRA, NCA, NCA, NCB, NRA, NCB);
         printf("-> initializing matrices\n");
@@ -104,8 +120,7 @@ int main (int argc, char *argv[])
 
         /* recieve results from worker tasks */
         mtype = FROM_WORKER;
-        for (i=1; i<=numworkers; i++) {
-            source = i;
+        for (source=1; source<=numworkers; source++) {
             MPI_Recv(&offset, 1, MPI_INT, source, mtype, MPI_COMM_WORLD,
                     &status);
             MPI_Recv(&rows, 1, MPI_INT, source, mtype, MPI_COMM_WORLD,
@@ -126,6 +141,10 @@ int main (int argc, char *argv[])
      * work for the worker tasks
      ******************************************************************/
     if (taskid > MASTER) {
+        mtype = FROM_WORKER;
+        MPI_Get_processor_name(msg, &msg_len);
+        MPI_Send(msg, msg_len, MPI_CHAR, MASTER, mtype, MPI_COMM_WORLD);
+
         mtype = FROM_MASTER;
         MPI_Recv(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
         MPI_Recv(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);

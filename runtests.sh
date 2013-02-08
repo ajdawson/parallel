@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# Run test scripts.
+# Run test jobs and report timing information.
 #
 
 TIME="/usr/bin/time -f '%E real, %U user %S sys'"
-NPROCESSES=8
+NPROCESSES=3
 export OMP_NUM_THREADS=$NPROCESSES
 
 eval "$TIME ./mm_serial.exe"
